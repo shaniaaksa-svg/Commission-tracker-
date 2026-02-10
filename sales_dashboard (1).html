@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Performance Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--w:#fff;--off:#f8f7f4;--cr:#f2f0eb;--sa:#e8e5de;--g1:#d4d1ca;--g2:#b0aca4;--g3:#8a8680;--g4:#6b6862;--g5:#4a4843;--bk:#1a1816;--or:#e8720c;--orb:#f58a2c;--ord:rgba(232,114,12,.08);--orm:rgba(232,114,12,.15);--gn:#2d8a4e;--gnd:rgba(45,138,78,.08);--r:10px;--sh:0 1px 3px rgba(0,0,0,.04);--shm:0 4px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--off);color:var(--bk);min-height:100vh;-webkit-font-smoothing:antialiased}
+.app{max-width:1440px;margin:0 auto;padding:28px 40px 60px}
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;padding-bottom:24px;border-bottom:2px solid var(--bk)}
+.hdr h1{font-family:'Source Serif 4',serif;font-size:34px;font-weight:700;color:var(--bk);letter-spacing:-.5px;line-height:1}
+.hdr h1 span{color:var(--or)}
+.hdr-m{color:var(--g3);font-size:13px;margin-top:6px}
+.pls{display:flex;gap:8px}
+.pl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 16px;border-radius:100px;background:var(--bk);color:var(--w)}
+.pl.o{background:var(--or)}
+.pl .d{width:6px;height:6px;border-radius:50%;background:var(--or)}
+.pl.o .d{background:var(--w)}
+.vtabs{display:flex;gap:4px;margin-bottom:24px;background:var(--cr);border-radius:8px;padding:4px;width:fit-content}
+.vt{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;padding:8px 20px;border-radius:6px;cursor:pointer;border:none;background:0;color:var(--g3);transition:all .15s}
+.vt:hover{color:var(--g5)}.vt.on{background:var(--w);color:var(--bk);box-shadow:var(--sh)}
+.kr{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
+.kp{background:var(--w);border:1px solid var(--sa);border-radius:var(--r);padding:22px 24px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.kp:hover{transform:translateY(-2px);box-shadow:var(--shm)}
+.kp-l{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--g3);margin-bottom:10px}
+.kp-v{font-family:'Source Serif 4',serif;font-size:30px;font-weight:700;line-height:1}
+.kp-s{font-size:12px;color:var(--g3);margin-top:8px}
+.kp-a{position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 var(--r) 0 60px;background:var(--ord)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.cd{background:var(--w);border:1px solid var(--sa);border-radius:var(--r);padding:24px;box-shadow:var(--sh)}
+.fw{grid-column:1/-1}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.ct{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g4)}
+.cb{font-size:11px;color:var(--g3);background:var(--cr);padding:4px 10px;border-radius:6px;font-weight:500}
+table.rt{width:100%;border-collapse:collapse}
+.rt th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--g3);padding:0 14px 12px;border-bottom:2px solid var(--sa)}
+.rt th:not(:first-child){text-align:right}.rt td{padding:13px 14px;font-size:14px;border-bottom:1px solid var(--cr)}
+.rt td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}.rt tr:last-child td{border-bottom:none}
+.rt tr{transition:background .1s;cursor:pointer}.rt tr:hover td{background:var(--ord)}
+.rn{display:flex;align-items:center;gap:10px;font-weight:600}
+.rk{font-size:10px;font-weight:700;color:var(--w);background:var(--bk);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.rk.gd{background:var(--or)}
+.hb{display:flex;flex-direction:column;gap:11px}
+.hr{display:flex;align-items:center;gap:12px}
+.hl{width:100px;font-size:12px;font-weight:500;color:var(--g4);text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht{flex:1;height:26px;background:var(--cr);border-radius:6px;overflow:hidden}
+.hf{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.25,.46,.45,.94)}
+.hv{font-size:12px;font-weight:700;width:72px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:5px;height:220px}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bb{width:100%;border-radius:5px 5px 2px 2px;position:relative;min-height:2px;cursor:pointer;transition:all .15s}
+.bb:hover{filter:brightness(1.05);transform:scaleY(1.02);transform-origin:bottom}
+.bb .tp{position:absolute;top:-32px;left:50%;transform:translateX(-50%);background:var(--bk);color:var(--w);padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none;z-index:10}
+.bb .tp::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--bk)}
+.bb:hover .tp{opacity:1}
+.bl{font-size:9px;color:var(--g3);text-align:center;font-weight:500}
+.sx{max-height:460px;overflow-y:auto;border-radius:8px}
+.sx::-webkit-scrollbar{width:5px}.sx::-webkit-scrollbar-track{background:0}.sx::-webkit-scrollbar-thumb{background:var(--sa);border-radius:10px}
+table.dt{width:100%;border-collapse:collapse}
+.dt th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--g3);padding:0 10px 12px;border-bottom:2px solid var(--sa);position:sticky;top:0;background:var(--w);z-index:2;cursor:pointer}
+.dt td{padding:9px 10px;font-size:12.5px;border-bottom:1px solid var(--cr)}.dt tr{transition:background .1s}.dt tr:hover td{background:var(--ord)}
+.dt .n{text-align:right;font-variant-numeric:tabular-nums}
+.bg{display:inline-block;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;letter-spacing:.2px}
+.bg.r{background:var(--ord);color:var(--or)}.bg.g{background:var(--gnd);color:var(--gn)}.bg.c{background:rgba(34,130,180,.08);color:#2282b4}.bg.o{background:var(--cr);color:var(--g4)}
+.mo{display:none;position:fixed;inset:0;background:rgba(13,12,11,.5);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
+.mo.sh{display:flex}
+.md{background:var(--w);border-radius:14px;width:90%;max-width:700px;max-height:85vh;overflow-y:auto;padding:32px;position:relative;box-shadow:0 25px 60px rgba(0,0,0,.15);animation:mI .25s ease}
+@keyframes mI{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mx{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;background:var(--cr);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--g4);transition:all .15s}
+.mx:hover{background:var(--sa);color:var(--bk)}
+.md h2{font-family:'Source Serif 4',serif;font-size:24px;font-weight:700;margin-bottom:6px}
+.md h2 span{color:var(--or)}
+.md-s{font-size:13px;color:var(--g3);margin-bottom:20px}
+.mkps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.mk{background:var(--off);border-radius:8px;padding:14px 16px;border:1px solid var(--sa)}
+.mk-l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--g3);margin-bottom:6px}
+.mk-v{font-family:'Source Serif 4',serif;font-size:22px;font-weight:700}
+.ycs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.yc{background:var(--w);border:1px solid var(--sa);border-radius:var(--r);padding:24px;cursor:pointer;transition:all .2s;box-shadow:var(--sh)}
+.yc:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--or)}
+.yc.on{border-color:var(--or);border-width:2px}
+.yc h3{font-family:'Source Serif 4',serif;font-size:20px;font-weight:700;margin-bottom:12px}
+.yc h3 span{color:var(--or)}
+.ys{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--cr)}.ys:last-child{border-bottom:none}
+.ys-l{color:var(--g3)}.ys-v{font-weight:700}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.a{animation:fu .4s ease both}
+@media(max-width:1024px){.kr{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr}.ycs{grid-template-columns:1fr}}
+@media(max-width:600px){.app{padding:16px}.kr{grid-template-columns:1fr 1fr}.hdr{flex-direction:column;gap:12px;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr a"><div><h1>Sales <span>Dashboard</span></h1><div class="hdr-m">Sep 2024 — Feb 2026 · Full Team Performance</div></div><div class="pls"><div class="pl"><div class="d"></div>131 Deals</div><div class="pl o"><div class="d"></div>6 Reps</div></div></div>
+<div class="vtabs a" style="animation-delay:.05s"><button class="vt on" onclick="sw('all',this)">All Time</button><button class="vt" onclick="sw('yearly',this)">Yearly</button><button class="vt" onclick="sw('monthly',this)">Monthly</button></div>
+<div id="v-all" class="vp">
+<div class="kr" id="kr1"></div>
+<div class="g2">
+<div class="cd a" style="animation-delay:.18s"><div class="ch"><span class="ct">Rep Leaderboard</span><span class="cb">Click for details</span></div><table class="rt"><thead><tr><th>Rep</th><th>Deals</th><th>ARR</th><th>Comm.</th></tr></thead><tbody id="rtb"></tbody></table></div>
+<div class="cd a" style="animation-delay:.22s"><div class="ch"><span class="ct">Revenue by Category</span><span class="cb" id="cc"></span></div><div class="hb" id="cbs"></div></div>
+</div>
+<div class="cd a fw" style="animation-delay:.26s;margin-bottom:14px"><div class="ch"><span class="ct">Monthly ARR Trend</span><span class="cb">Hover bars for details</span></div><div class="bars" id="mb"></div></div>
+<div class="g2">
+<div class="cd a" style="animation-delay:.3s"><div class="ch"><span class="ct">Appointments Set By</span></div><table class="rt"><thead><tr><th>Setter</th><th>Appts</th><th>ARR</th></tr></thead><tbody id="stb"></tbody></table></div>
+<div class="cd a" style="animation-delay:.34s"><div class="ch"><span class="ct">Top 10 Deals</span></div><div class="hb" id="td"></div></div>
+</div>
+<div class="cd a fw" style="animation-delay:.38s"><div class="ch"><span class="ct">All Deals</span><span class="cb">Click headers to sort</span></div><div class="sx"><table class="dt"><thead><tr><th onclick="sr('a')">Account ↕</th><th onclick="sr('c')">Category ↕</th><th>Closer</th><th onclick="sr('d')">Signed ↕</th><th class="n" onclick="sr('t')">Ticket ↕</th><th class="n">Freq</th><th class="n" onclick="sr('r')">ARR ↕</th></tr></thead><tbody id="dtb"></tbody></table></div></div>
+</div>
+<div id="v-yearly" class="vp" style="display:none"><div class="ycs" id="ycs"></div><div class="cd fw"><div class="ch"><span class="ct" id="ydt">Click a year above</span></div><div id="ydc"></div></div></div>
+<div id="v-monthly" class="vp" style="display:none"><div style="margin-bottom:18px;display:flex;align-items:center;gap:10px"><label style="font-size:13px;font-weight:600;color:var(--g4)">Month:</label><select id="ms" onchange="sMD()" style="font-family:'Outfit';font-size:14px;font-weight:600;padding:10px 16px;border-radius:8px;border:1px solid var(--sa);background:var(--w);color:var(--bk);cursor:pointer;min-width:220px;outline:none"></select></div><div id="mkr" class="kr" style="grid-template-columns:repeat(4,1fr)"></div><div class="cd fw" style="margin-top:14px"><div class="ch"><span class="ct">Deals This Month</span><span class="cb" id="mdc"></span></div><div class="sx"><table class="dt"><thead><tr><th>Account</th><th>Category</th><th>Closer</th><th class="n">Ticket</th><th class="n">ARR</th></tr></thead><tbody id="mtb"></tbody></table></div></div></div>
+</div>
+<div class="mo" id="mo" onclick="if(event.target===this)cM()"><div class="md"><button class="mx" onclick="cM()">✕</button><h2 id="mt2"></h2><div class="md-s" id="ms2"></div><div class="mkps" id="mkp"></div><div class="ch"><span class="ct">Deals Closed</span></div><div class="sx" style="max-height:300px"><table class="dt"><thead><tr><th>Account</th><th>Category</th><th>Signed</th><th class="n">ARR</th></tr></thead><tbody id="mtb2"></tbody></table></div></div></div>
+<script>
+const D=[
+["Hy-Vee Fast N Fresh","C-Store","Piercyn","Piercyn","9/24/24",549,4,2196,220],
+["Rochester Brewing","Restaurant/Bar","Piercyn","Piercyn","9/30/24",550,1,550,55],
+["Revel","Restaurant/Bar","Piercyn","Piercyn","10/4/24",550,4,2200,220],
+["Chicken N Pickle NKC","Restaurant/Bar","Piercyn","Piercyn","10/15/24",892,12,10707,1071],
+["Chicken N Pickle OP","Restaurant/Bar","Piercyn","Piercyn","10/16/24",852,12,10227,1023],
+["Pizza Hut Paola","Restaurant/Bar","Piercyn","Piercyn","10/18/24",2756,2,5512,551],
+["Baldwin City Beer Co","Restaurant/Bar","Piercyn","Piercyn","10/28/24",689,2,1378,138],
+["Third St. Social","Restaurant/Bar","Piercyn","Piercyn","10/30/24",1035,4,4140,414],
+["College Church","Church/Non-Profit","Piercyn","Piercyn","11/13/24",698,2,1396,140],
+["Meadowview Health","Retirement","Piercyn","Piercyn","11/18/24",676,4,2704,270],
+["Hy-Vee FNF Blue Spr","C-Store","Piercyn","Piercyn","12/4/24",513,4,2052,205],
+["Hy-Vee FNF Liberty","C-Store","Piercyn","Piercyn","12/12/24",549,4,2196,220],
+["Hy-Vee Liberty","Grocery","Piercyn","Piercyn","12/12/24",2937,4,11748,1175],
+["Big Burger","Restaurant/Bar","Piercyn","Piercyn","12/20/24",625,4,2500,250],
+["Wild Flour Baking","Bakery","Piercyn","Piercyn","12/22/24",628,2,1256,126],
+["Show Pony","Restaurant/Bar","Piercyn","Piercyn","1/9/25",794,4,3176,318],
+["Hilltop Market","Restaurant/Bar","Piercyn","Piercyn","1/16/25",795,4,3180,318],
+["Homestead CC","Country Club","Piercyn","Piercyn","1/16/25",482,4,1929,193],
+["New Horizon Academy","School/Daycare","Piercyn","Piercyn","1/24/25",607,2,1214,121],
+["Casa Amigo","Restaurant/Bar","Piercyn","Piercyn","2/10/25",824,4,3296,330],
+["District Bar & Grill","Restaurant/Bar","Piercyn","Piercyn","2/13/25",910,4,3640,364],
+["Reynolds Family Diner","Restaurant/Bar","Piercyn","Piercyn","3/3/25",607,1,607,61],
+["Hulsing Hotels","Hotel","Piercyn","Piercyn","3/4/25",746,4,2983,298],
+["Baxter's Coffee","C-Store","Piercyn","Piercyn","3/10/25",465,4,1858,186],
+["Abelardos Blue Spr","Restaurant/Bar","Piercyn","Piercyn","3/11/25",502,4,2008,201],
+["Abelardos Shawnee","Restaurant/Bar","Piercyn","Piercyn","3/11/25",502,4,2008,201],
+["The Happy Greek","Restaurant/Bar","Piercyn","Piercyn","3/17/25",437,4,1748,175],
+["Kiddie Academy","School/Daycare","Piercyn","Piercyn","3/25/25",559,2,1118,112],
+["Safi Fresh","Restaurant/Bar","Piercyn","Piercyn","3/25/25",535,2,1070,107],
+["Legends Field","Activity","Piercyn","Piercyn","3/25/25",1913,1,1913,191],
+["Perkins Topeka","Restaurant/Bar","Piercyn","Piercyn","3/30/25",1205,4,4820,482],
+["Perkins Lawrence","Restaurant/Bar","Piercyn","Piercyn","3/30/25",1205,4,4820,482],
+["Holy Smoke BBQ","Restaurant/Bar","Piercyn","Piercyn","4/3/25",1185,4,4740,474],
+["Abelardos Raytown","Restaurant/Bar","Piercyn","Piercyn","4/11/25",0,4,0,0],
+["First Washington","Property Mgmt","Piercyn","Piercyn","4/14/25",730,1,730,73],
+["Culver's N Oak","Restaurant/Bar","Piercyn","Piercyn","4/24/25",505,4,2020,202],
+["Hy-Vee Gladstone","Grocery","Piercyn","Piercyn","4/28/25",2480,4,9920,992],
+["Hemma Hemma","Restaurant/Bar","Piercyn","Piercyn","5/5/25",762,4,3048,305],
+["Hy-Vee Raytown","Grocery","Piercyn","Piercyn","5/5/25",2569,4,10276,1028],
+["Sac & Fox Casino","Casino","Piercyn","Piercyn","5/27/25",1915,4,7660,766],
+["Hy-Vee Prairie Village","Grocery","Piercyn","Piercyn","5/29/25",2569,4,10276,1028],
+["Panchos North KC","Restaurant/Bar","Piercyn","Colin","5/29/25",730,4,2920,292],
+["Earl's Premier","Restaurant/Bar","Piercyn","Colin","6/12/25",655,4,2620,131],
+["Sea Capitan Cocina","Restaurant/Bar","Piercyn","Colin","6/12/25",994,4,3976,199],
+["Craft Putt Lee's Sum","Restaurant/Bar","Piercyn","Colin","6/12/25",730,4,2920,292],
+["Bacaro Primo","Restaurant/Bar","Piercyn","Colin","6/12/25",655,4,2620,131],
+["La Fonda El Taquito","Restaurant/Bar","Piercyn","Colin","6/14/25",430,4,1720,172],
+["Papa John's Lawrence","Restaurant/Bar","Piercyn","Colin","6/18/25",1231,4,4924,246],
+["Larry's Xpressmart","C-Store","Piercyn","Colin","6/20/25",628,4,2512,251],
+["Ethiopian Fellowship","Church/Non-Profit","Colin","Colin","6/20/25",430,1,430,43],
+["Artego 39th","Restaurant/Bar","Colin","Colin","6/23/25",1090,2,2180,218],
+["Tower Tavern","Restaurant/Bar","Colin","Colin","6/25/25",655,4,2620,262],
+["Vito's Original Pizza","Restaurant/Bar","Colin","Colin","6/27/25",585,2,1170,117],
+["Classic Catering","Caterer","Colin","Colin","7/3/25",595,2,1190,119],
+["Welcome House","Church/Non-Profit","Colin","Colin","7/8/25",383,2,766,77],
+["Blue Springs Church","Church/Non-Profit","Colin","Colin","7/13/25",396,1,396,40],
+["Ding Dong Dogs","Grocery","Piercyn","Colin","7/15/25",721,4,2884,144],
+["Exclusive Jerk","Restaurant/Bar","Colin","Colin","7/17/25",874,4,3496,350],
+["KC Ramen","Restaurant/Bar","Colin","Colin","7/21/25",730,2,1460,146],
+["Tavern Mission Farms","Restaurant/Bar","Colin","Colin","7/23/25",1117,4,4468,447],
+["Quaff Bar & Grill","Restaurant/Bar","Piercyn","Piercyn","8/6/25",869,4,3476,348],
+["3 Halves Brewing","Restaurant/Bar","Piercyn","Colin","8/12/25",925,4,3700,370],
+["Po Boys","Restaurant/Bar","Piercyn","Piercyn","8/13/25",535,4,2140,214],
+["Tiki Taco 39th","Restaurant/Bar","Colin","Colin","8/24/25",485,6,2910,291],
+["Tiki Taco OP","Restaurant/Bar","Colin","Colin","8/24/25",585,4,2340,234],
+["Tiki Taco Troost","Restaurant/Bar","Colin","Colin","8/24/25",585,4,2340,0],
+["Tiki Taco Olathe","Restaurant/Bar","Colin","Colin","8/24/25",585,4,2340,234],
+["Tim's Pizza","Restaurant/Bar","Piercyn","Piercyn","8/29/25",583,2,1166,117],
+["Star Development","Restaurant/Bar","Piercyn","Myles","9/30/25",988,1,988,99],
+["Whites Foodliner","Grocery","Myles","Myles","10/7/25",583,2,1166,117],
+["Butler One Stop","C-Store","Myles","Myles","10/7/25",515,1,515,52],
+["Cici's Pizza Roe","Restaurant/Bar","Myles","Myles","10/10/25",1135,2,2270,227],
+["Tiki Taco Shawnee","Restaurant/Bar","Piercyn","Eric","10/10/25",585,4,2340,117],
+["Lee's Summit Place","Retirement","Piercyn","Piercyn","10/13/25",490,2,980,98],
+["Alpine Breeze","Retirement","Piercyn","Piercyn","10/15/25",490,2,980,98],
+["Sri's Kitchen","Food Truck","Piercyn","Levi","10/20/25",175,1,175,0],
+["Pizza Tascio StJo","Restaurant/Bar","Myles","Myles","10/20/25",466,1,466,47],
+["Pizza Tascio Belton","Restaurant/Bar","Myles","Myles","10/20/25",430,1,430,43],
+["Pizza Tascio Waldo","Restaurant/Bar","Myles","Myles","10/20/25",430,1,430,43],
+["Pizza Tascio NKC","Restaurant/Bar","Myles","Myles","10/20/25",430,1,430,43],
+["Pizza Tascio Overland","Restaurant/Bar","Myles","Myles","10/20/25",430,1,430,43],
+["Pizza Tascio 39th","Restaurant/Bar","Myles","Myles","10/20/25",430,1,430,43],
+["Hyatt Place","Hotel","Myles","Eric","10/20/25",0,0,0,0],
+["American Legion 499","Church/Non-Profit","Eric","Eric","10/24/25",502,1,502,25],
+["Game Day Chicken","Restaurant/Bar","Myles","Myles","10/29/25",0,4,0,0],
+["St. Joseph Chateau","Retirement","Piercyn","Piercyn","10/15/25",490,2,980,98],
+["1701A McGee","Restaurant/Bar","Eric","Eric","10/27/25",0,4,0,0],
+["Speedy Corner","C-Store","Myles","Myles","11/5/25",631,4,2524,252],
+["Blue Springs Assembly","Church/Non-Profit","Myles","Myles","11/6/25",535,1,535,54],
+["Vibes Kitchen","Restaurant/Bar","Myles","Myles","11/7/25",0,4,0,0],
+["Hope Chapel","Church/Non-Profit","Myles","Myles","11/12/25",535,1,535,54],
+["Barrio Red Bridge","Restaurant/Bar","Myles","Eric","11/17/25",499,4,1996,150],
+["Oak Pointe Maryville","Retirement","Eric","Eric","11/17/25",619,2,1238,62],
+["Culvers Olathe","Restaurant/Bar","Piercyn","Piercyn","11/18/25",535,4,2140,214],
+["Brookside Barrio","Restaurant/Bar","Myles","Eric","11/18/25",499,4,1996,100],
+["Barrio Briarcliff","Restaurant/Bar","Myles","Eric","11/18/25",499,4,1996,150],
+["Koehn Bakery","Bakery","Piercyn","Piercyn","11/18/25",575,1,575,58],
+["Barrio Taqueria","Restaurant/Bar","Myles","Eric","11/18/25",0,0,0,0],
+["Abelardo's Liberty","Restaurant/Bar","Piercyn","Piercyn","12/3/25",502,4,2008,201],
+["Warrensburg Senior","Retirement","Eric","Eric","12/3/25",731,1,731,37],
+["Hy-Vee 135th St","Grocery","Myles","Myles","12/5/25",3196,4,12783,1278],
+["Iglesia Christiana","Church/Non-Profit","Eric","Eric","12/8/25",571,1,571,0],
+["Marco's Pizza OP","Restaurant/Bar","Myles","Myles","12/8/25",1418,1,1418,142],
+["Abelardo's Indepen.","Restaurant/Bar","Piercyn","Piercyn","12/10/25",502,4,2008,201],
+["Holiday Lanes","Activity","Eric","Eric","12/10/25",671,2,1342,67],
+["Sakura","Restaurant/Bar","Myles","Myles","12/15/25",625,4,2500,250],
+["Lulu's Thai OP","Restaurant/Bar","Eric","Eric","12/16/25",585,4,2340,117],
+["Lulu's Thai Cross.","Restaurant/Bar","Eric","Eric","12/17/25",585,4,2340,117],
+["Lulu's Thai West.","Restaurant/Bar","Eric","Eric","12/18/25",585,4,2340,117],
+["Green Dirt on Oak","Restaurant/Bar","Piercyn","Piercyn","12/19/25",730,4,2920,292],
+["Greater Faith Baptist","Church/Non-Profit","Myles","Myles","12/22/25",571,1,571,57],
+["Cici's Pizza #328","Restaurant/Bar","Myles","Myles","12/23/25",0,2,0,0],
+["Cameron Regional Med","Hospital","Myles","Myles","12/27/25",730,2,1460,146],
+["Wings Cafe Westport","Restaurant/Bar","Myles","Myles","12/28/25",838,1,838,84],
+["The Borough KC","Restaurant/Bar","Eric","Eric","1/2/26",730,4,2920,146],
+["Paola Country Club","Country Club","Shania","Shania","1/6/26",535,2,1070,54],
+["KC Juke House","Restaurant/Bar","Eric","Eric","1/6/26",655,4,2620,131],
+["Kids R Kids Academy","School/Daycare","Piercyn","Piercyn","1/7/26",175,1,175,18],
+["Cushman & Wakefield","Property Mgmt","Levi","Levi","1/7/26",430,1,430,22],
+["St. Teresa's Academy","School/Daycare","Piercyn","Piercyn","1/8/26",250,1,250,25],
+["Nick Greek Olathe","Restaurant/Bar","Eric","Eric","1/15/26",482,4,1928,96],
+["Nick Greek Lees Sum","Restaurant/Bar","Eric","Eric","1/15/26",482,4,1928,96],
+["Nick Greek State Line","Restaurant/Bar","Eric","Eric","1/15/26",482,4,1928,96],
+["Christ the King","Church/Non-Profit","Shania","Shania","1/15/26",478,1,478,0],
+["Holy Trinity Lutheran","Church/Non-Profit","Eric","Eric","1/19/26",211,1,211,11],
+["Lucky KC LLC","Restaurant/Bar","Shania","Shania","1/19/26",1327,4,5308,265],
+["Blue Line Productions","Restaurant/Bar","Piercyn","Piercyn","1/28/26",583,4,2332,233],
+["Champs Fast Stop","C-Store","Eric","Eric","1/29/26",430,2,860,43],
+["Healing House","Church/Non-Profit","Piercyn","Piercyn","1/30/26",502,2,1004,100],
+["MT Plate Cafe","Caterer","Piercyn","Piercyn","1/31/26",810,2,1620,162],
+["McDonald's S Bolger","Restaurant/Bar","Shania","Shania","2/4/26",559,4,2236,112],
+["MALLARD'S BBQ","Restaurant/Bar","Shania","Shania","2/5/26",571,4,2284,114],
+["McDonald's E 23rd","Restaurant/Bar","Piercyn","Piercyn","2/6/26",559,4,2236,224],
+["Never On Sunday","Restaurant/Bar","Piercyn","Piercyn","2/7/26",730,4,2920,292]
+];
+const $=s=>document.getElementById(s),fm=n=>n===0?'$0':'$'+n.toLocaleString(),fk=n=>n>=10e3?'$'+(n/1e3).toFixed(1)+'K':fm(n);
+const pd=s=>{const p=s.split('/');return new Date(2e3+parseInt(p[2]),parseInt(p[0])-1,parseInt(p[1]))};
+const mk=s=>{const p=s.split('/');const y=2e3+parseInt(p[2]);return y+'-'+(parseInt(p[0])<10?'0':'')+parseInt(p[0])};
+const ml=k=>{const[y,m]=k.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]+' '+y.slice(2)};
+const mlf=k=>{const[y,m]=k.split('-');return['January','February','March','April','May','June','July','August','September','October','November','December'][parseInt(m)-1]+' '+y};
+const yr=s=>2e3+parseInt(s.split('/')[2]);
+const cc=c=>{if(c.includes('Restaurant')||c.includes('Bar')||c.includes('Hotel')||c.includes('Casino')||c.includes('Activity'))return'r';if(c.includes('Grocery')||c.includes('C-Store')||c.includes('Bakery')||c.includes('Food'))return'g';if(c.includes('Church')||c.includes('Retirement')||c.includes('Hospital'))return'c';return'o'};
+D.sort((a,b)=>pd(a[4])-pd(b[4]));
+
+function sw(v,el){document.querySelectorAll('.vt').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.vp').forEach(p=>p.style.display='none');$(('v-'+v)).style.display='block';if(v==='yearly')rY();if(v==='monthly')rMo()}
+
+// KPIs
+function rK(d){
+const ta=d.reduce((s,x)=>s+x[7],0),tc=d.reduce((s,x)=>s+x[8],0);
+const vt=d.filter(x=>x[5]>0),at=vt.length?Math.round(vt.reduce((s,x)=>s+x[5],0)/vt.length):0;
+const ad=d.length?Math.round(ta/d.length):0;
+$('kr1').innerHTML=`
+<div class="kp a" style="animation-delay:.08s"><div class="kp-l">Total ARR</div><div class="kp-v">${fm(ta)}</div><div class="kp-s">Annual recurring revenue</div><div class="kp-a"></div></div>
+<div class="kp a" style="animation-delay:.1s"><div class="kp-l">Deals Closed</div><div class="kp-v">${d.length}</div><div class="kp-s">Across all reps</div><div class="kp-a"></div></div>
+<div class="kp a" style="animation-delay:.12s"><div class="kp-l">Commission</div><div class="kp-v" style="color:var(--or)">${fm(tc)}</div><div class="kp-s">Total payout</div><div class="kp-a"></div></div>
+<div class="kp a" style="animation-delay:.14s"><div class="kp-l">Avg Ticket</div><div class="kp-v">${fm(at)}</div><div class="kp-s">Per service</div><div class="kp-a"></div></div>
+<div class="kp a" style="animation-delay:.16s"><div class="kp-l">Avg Deal ARR</div><div class="kp-v">${fm(ad)}</div><div class="kp-s">Per deal</div><div class="kp-a"></div></div>`}
+
+// Rep table
+function rR(d){const rp={};d.forEach(x=>{const c=x[3];if(!rp[c])rp[c]={n:0,a:0,c:0};rp[c].n++;rp[c].a+=x[7];rp[c].c+=x[8]});
+const s=Object.entries(rp).sort((a,b)=>b[1].a-a[1].a);const tb=$('rtb');tb.innerHTML='';
+s.forEach(([n,v],i)=>{const tr=document.createElement('tr');tr.onclick=()=>oM(n,d);
+tr.innerHTML=`<td><div class="rn"><div class="rk ${i===0?'gd':''}">${i+1}</div>${n}</div></td><td>${v.n}</td><td style="font-weight:700;color:var(--or)">${fm(v.a)}</td><td style="font-weight:600">${fm(v.c)}</td>`;tb.appendChild(tr)})}
+
+// Categories
+function rC(d){const cs={};d.forEach(x=>{if(!cs[x[1]])cs[x[1]]={n:0,a:0};cs[x[1]].n++;cs[x[1]].a+=x[7]});
+const s=Object.entries(cs).sort((a,b)=>b[1].a-a[1].a);const mx=s[0][1].a;const c=$('cbs');c.innerHTML='';
+s.slice(0,6).forEach(([n,v])=>{c.innerHTML+=`<div class="hr"><div class="hl">${n.length>14?n.slice(0,13)+'…':n}</div><div class="ht"><div class="hf" style="width:${(v.a/mx*100).toFixed(1)}%;background:var(--or)"></div></div><div class="hv" style="color:var(--or)">${fk(v.a)}</div></div>`});
+const oa=s.slice(6).reduce((t,c)=>t+c[1].a,0);if(oa>0)c.innerHTML+=`<div class="hr"><div class="hl">Other (${s.length-6})</div><div class="ht"><div class="hf" style="width:${(oa/mx*100).toFixed(1)}%;background:var(--g2)"></div></div><div class="hv" style="color:var(--g4)">${fk(oa)}</div></div>`;
+$('cc').textContent=s.length+' categories'}
+
+// Monthly bars
+function rMB(d){const mo={};d.forEach(x=>{const k=mk(x[4]);if(!mo[k])mo[k]={a:0,n:0};mo[k].a+=x[7];mo[k].n++});
+const ks=Object.keys(mo).sort();const mx=Math.max(...ks.map(k=>mo[k].a));const c=$('mb');c.innerHTML='';
+ks.forEach(k=>{c.innerHTML+=`<div class="bc"><div class="bb" style="height:${Math.max(mo[k].a/mx*100,1.5).toFixed(1)}%;background:linear-gradient(180deg,var(--or),rgba(232,114,12,.35))"><div class="tp">${ml(k)} · ${fm(mo[k].a)} · ${mo[k].n} deals</div></div><div class="bl">${ml(k)}</div></div>`})}
+
+// Setters
+function rS(d){const st={};d.forEach(x=>{const s=x[2];if(!st[s])st[s]={n:0,a:0};st[s].n++;st[s].a+=x[7]});
+const s=Object.entries(st).sort((a,b)=>b[1].a-a[1].a);const tb=$('stb');tb.innerHTML='';
+s.forEach(([n,v])=>{tb.innerHTML+=`<tr><td><div class="rn">${n}</div></td><td>${v.n}</td><td style="font-weight:700;color:var(--or)">${fm(v.a)}</td></tr>`})}
+
+// Top deals
+function rTD(d){const s=[...d].sort((a,b)=>b[7]-a[7]).slice(0,10);const mx=s[0][7];const c=$('td');c.innerHTML='';
+s.forEach(x=>{const l=x[0].length>16?x[0].slice(0,15)+'…':x[0];c.innerHTML+=`<div class="hr" title="${x[0]} — ${x[3]}"><div class="hl" style="width:120px;font-size:11px">${l}</div><div class="ht"><div class="hf" style="width:${(x[7]/mx*100).toFixed(1)}%;background:${x[7]>8e3?'var(--or)':x[7]>4e3?'var(--orb)':'var(--g2)'}"></div></div><div class="hv" style="color:${x[7]>5e3?'var(--or)':'var(--g5)'}">${fk(x[7])}</div></div>`})}
+
+// Deal table
+let sf='d',sd=1;
+function sr(f){if(sf===f)sd*=-1;else{sf=f;sd=1}rDT(D)}
+function rDT(d){const s=[...d].sort((a,b)=>{if(sf==='a')return sd*a[0].localeCompare(b[0]);if(sf==='c')return sd*a[1].localeCompare(b[1]);if(sf==='d')return sd*(pd(a[4])-pd(b[4]));if(sf==='t')return sd*(a[5]-b[5]);if(sf==='r')return sd*(a[7]-b[7]);return 0});
+const tb=$('dtb');tb.innerHTML='';s.forEach(x=>{tb.innerHTML+=`<tr><td style="font-weight:500">${x[0]}</td><td><span class="bg ${cc(x[1])}">${x[1]}</span></td><td style="color:var(--g3)">${x[3]}</td><td style="color:var(--g3)">${x[4]}</td><td class="n">${fm(x[5])}</td><td class="n" style="color:var(--g3)">${x[6]}x</td><td class="n" style="font-weight:700;color:${x[7]>5e3?'var(--or)':x[7]>2e3?'var(--bk)':'var(--g4)'}">${fm(x[7])}</td></tr>`})}
+
+// Modal
+function oM(n,d){const rd=d.filter(x=>x[3]===n).sort((a,b)=>pd(b[4])-pd(a[4]));
+const ta=rd.reduce((s,x)=>s+x[7],0),tc=rd.reduce((s,x)=>s+x[8],0);
+const vt=rd.filter(x=>x[5]>0),at=vt.length?Math.round(vt.reduce((s,x)=>s+x[5],0)/vt.length):0;
+$('mt2').innerHTML=n+"'s <span>Performance</span>";$('ms2').textContent=rd.length+' deals closed';
+$('mkp').innerHTML=`<div class="mk"><div class="mk-l">Total ARR</div><div class="mk-v" style="color:var(--or)">${fm(ta)}</div></div><div class="mk"><div class="mk-l">Commission</div><div class="mk-v">${fm(tc)}</div></div><div class="mk"><div class="mk-l">Avg Ticket</div><div class="mk-v">${fm(at)}</div></div>`;
+const tb=$('mtb2');tb.innerHTML='';rd.forEach(x=>{tb.innerHTML+=`<tr><td style="font-weight:500">${x[0]}</td><td><span class="bg ${cc(x[1])}">${x[1]}</span></td><td style="color:var(--g3)">${x[4]}</td><td class="n" style="font-weight:700;color:${x[7]>5e3?'var(--or)':'var(--bk)'}">${fm(x[7])}</td></tr>`});
+$('mo').classList.add('sh')}
+function cM(){$('mo').classList.remove('sh')}
+
+// Yearly
+function rY(){const ys={};D.forEach(x=>{const y=yr(x[4]);if(!ys[y])ys[y]={d:[],a:0,n:0,c:0};ys[y].d.push(x);ys[y].a+=x[7];ys[y].n++;ys[y].c+=x[8]});
+const c=$('ycs');c.innerHTML='';Object.keys(ys).sort().forEach(y=>{const v=ys[y],ad=v.n?Math.round(v.a/v.n):0;
+c.innerHTML+=`<div class="yc" onclick="sYD(${y},this)"><h3><span>${y}</span></h3><div class="ys"><span class="ys-l">Deals</span><span class="ys-v">${v.n}</span></div><div class="ys"><span class="ys-l">Total ARR</span><span class="ys-v" style="color:var(--or)">${fm(v.a)}</span></div><div class="ys"><span class="ys-l">Commission</span><span class="ys-v">${fm(v.c)}</span></div><div class="ys"><span class="ys-l">Avg Deal</span><span class="ys-v">${fm(ad)}</span></div></div>`})}
+
+function sYD(y,el){document.querySelectorAll('.yc').forEach(c=>c.classList.remove('on'));el.classList.add('on');
+const yd=D.filter(x=>yr(x[4])===y);const mo={};yd.forEach(x=>{const k=mk(x[4]);if(!mo[k])mo[k]={a:0,n:0,c:0};mo[k].a+=x[7];mo[k].n++;mo[k].c+=x[8]});
+$('ydt').textContent=y+' Monthly Breakdown';const ks=Object.keys(mo).sort();
+let h='<table class="rt"><thead><tr><th>Month</th><th>Deals</th><th>ARR</th><th>Comm.</th><th>Avg Deal</th></tr></thead><tbody>';
+ks.forEach(k=>{const v=mo[k],ad=v.n?Math.round(v.a/v.n):0;h+=`<tr onclick="sMF('${k}')"><td style="font-weight:600">${ml(k)}</td><td>${v.n}</td><td style="font-weight:700;color:var(--or)">${fm(v.a)}</td><td>${fm(v.c)}</td><td style="color:var(--g4)">${fm(ad)}</td></tr>`});
+h+='</tbody></table>';$('ydc').innerHTML=h}
+
+function sMF(k){sw('monthly',document.querySelectorAll('.vt')[2]);setTimeout(()=>{$('ms').value=k;sMD()},50)}
+
+// Monthly
+function rMo(){const mo={};D.forEach(x=>{const k=mk(x[4]);if(!mo[k])mo[k]=[];mo[k].push(x)});
+const ks=Object.keys(mo).sort().reverse();const sel=$('ms');sel.innerHTML='';
+ks.forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=mlf(k)+' ('+mo[k].length+' deals)';sel.appendChild(o)});sMD()}
+
+function sMD(){const k=$('ms').value;const mo={};D.forEach(x=>{const mk2=mk(x[4]);if(!mo[mk2])mo[mk2]=[];mo[mk2].push(x)});
+const md=mo[k]||[];const ta=md.reduce((s,x)=>s+x[7],0),tc=md.reduce((s,x)=>s+x[8],0);
+const vt=md.filter(x=>x[5]>0),at=vt.length?Math.round(vt.reduce((s,x)=>s+x[5],0)/vt.length):0;
+$('mkr').innerHTML=`<div class="kp"><div class="kp-l">Deals</div><div class="kp-v">${md.length}</div></div><div class="kp"><div class="kp-l">ARR</div><div class="kp-v" style="color:var(--or)">${fm(ta)}</div></div><div class="kp"><div class="kp-l">Commission</div><div class="kp-v">${fm(tc)}</div></div><div class="kp"><div class="kp-l">Avg Ticket</div><div class="kp-v">${fm(at)}</div></div>`;
+$('mdc').textContent=md.length+' deals';const tb=$('mtb');tb.innerHTML='';
+md.sort((a,b)=>b[7]-a[7]).forEach(x=>{tb.innerHTML+=`<tr><td style="font-weight:500">${x[0]}</td><td><span class="bg ${cc(x[1])}">${x[1]}</span></td><td style="color:var(--g3)">${x[3]}</td><td class="n">${fm(x[5])}</td><td class="n" style="font-weight:700;color:${x[7]>5e3?'var(--or)':'var(--bk)'}">${fm(x[7])}</td></tr>`})}
+
+// Init
+rK(D);rR(D);rC(D);rMB(D);rS(D);rTD(D);rDT(D);
+</script>
+</body></html>

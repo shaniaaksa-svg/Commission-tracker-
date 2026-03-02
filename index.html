@@ -93,7 +93,7 @@ table.dt{width:100%;border-collapse:collapse}
 </head>
 <body>
 <div class="app">
-<div class="hdr a"><div><h1>Sales <span>Dashboard</span></h1><div class="hdr-m">Sep 2024 — Feb 2026 · Full Team Performance</div></div><div class="pls"><div class="pl"><div class="d"></div>131 Deals</div><div class="pl o"><div class="d"></div>6 Reps</div></div></div>
+<div class="hdr a"><div><h1>Sales <span>Dashboard</span></h1><div class="hdr-m">Sep 2024 — Feb 2026 · Full Team Performance</div></div><div class="pls"><div class="pl"><div class="d"></div>133 Deals</div><div class="pl o"><div class="d"></div>6 Reps</div></div></div>
 <div class="vtabs a" style="animation-delay:.05s"><button class="vt on" onclick="sw('all',this)">All Time</button><button class="vt" onclick="sw('yearly',this)">Yearly</button><button class="vt" onclick="sw('monthly',this)">Monthly</button></div>
 <div id="v-all" class="vp">
 <div class="kr" id="kr1"></div>
@@ -247,7 +247,9 @@ const D=[
 ["McDonald's S Bolger","Restaurant/Bar","Shania","Shania","2/4/26",559,4,2236,112],
 ["MALLARD'S BBQ","Restaurant/Bar","Shania","Shania","2/5/26",571,4,2284,114],
 ["McDonald's E 23rd","Restaurant/Bar","Piercyn","Piercyn","2/6/26",559,4,2236,224],
-["Never On Sunday","Restaurant/Bar","Piercyn","Piercyn","2/7/26",730,4,2920,292]
+["Never On Sunday","Restaurant/Bar","Piercyn","Piercyn","2/7/26",730,4,2920,292],
+["Abelardos Lenexa","Restaurant/Bar","Piercyn","Piercyn","2/13/26",502,4,2006,201],
+["Oddly Correct","Restaurant/Bar","Piercyn","Piercyn","2/24/26",547,1,547,55]
 ];
 const $=s=>document.getElementById(s),fm=n=>n===0?'$0':'$'+n.toLocaleString(),fk=n=>n>=10e3?'$'+(n/1e3).toFixed(1)+'K':fm(n);
 const pd=s=>{const p=s.split('/');return new Date(2e3+parseInt(p[2]),parseInt(p[0])-1,parseInt(p[1]))};
